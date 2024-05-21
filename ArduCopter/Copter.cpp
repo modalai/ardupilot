@@ -840,3 +840,36 @@ Copter copter;
 AP_Vehicle& vehicle = copter;
 
 AP_HAL_MAIN_CALLBACKS(&copter);
+
+#include <AP_HAL_QURT/interface.h>
+
+class ValueTest {
+public:
+	ValueTest(int val) : _value(val) {};
+	~ValueTest() {};
+
+	int getValue() const { return _value; }
+
+private:
+	int _value;
+};
+
+const ValueTest& get_ValueTest(int init) {
+    static const ValueTest *vt;
+    if (vt == nullptr) {
+        vt = new ValueTest(init);
+    }
+    return *vt;
+}
+
+const ValueTest& myValue = get_ValueTest(5);
+
+int px4muorb_orb_initialize(fc_func_ptrs *func_ptrs, int32_t clock_offset_us)
+{
+	HAP_PRINTF("The address is %p", &myValue);
+	if (&myValue != nullptr) {
+		HAP_PRINTF("The value is %d", myValue.getValue());
+	}
+
+	return 0;
+}

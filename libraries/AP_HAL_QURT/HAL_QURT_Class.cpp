@@ -77,25 +77,31 @@ HAL_QURT::HAL_QURT() :
 
 void HAL_QURT::run(int argc, char* const argv[], Callbacks* callbacks) const
 {
-    assert(callbacks);
+	HAP_PRINTF("In HAL_QURT::run");
 
+    assert(callbacks);
+	
     /* initialize all drivers and private members here.
      * up to the programmer to do this in the correct order.
      * Scheduler should likely come first. */
-    scheduler->init();
+	HAP_PRINTF("scheduler: %p", scheduler);
+	HAP_PRINTF("schedulerInstance: %p", &schedulerInstance);
+    // scheduler->init();
+	schedulerInstance.init();
     schedulerInstance.hal_initialized();
-    serial0Driver.begin(115200);
-    rcinDriver.init();
-    callbacks->setup();
-    scheduler->set_system_initialized();
+    // serial0Driver.begin(115200);
+    // rcinDriver.init();
+    // callbacks->setup();
+    // scheduler->set_system_initialized();
 
-    for (;;) {
-        callbacks->loop();
-    }
+    // for (;;) {
+    //     callbacks->loop();
+    // }
 }
 
 const AP_HAL::HAL& AP_HAL::get_HAL() {
     static const HAL_QURT *hal;
+	HAP_PRINTF("In HAL_QURT get_HAL. %p", hal);
     if (hal == nullptr) {
         hal = new HAL_QURT;
         HAP_PRINTF("allocated HAL_QURT of size %u", sizeof(*hal));

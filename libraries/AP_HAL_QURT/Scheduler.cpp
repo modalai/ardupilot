@@ -28,6 +28,8 @@ Scheduler::Scheduler()
 
 void Scheduler::init()
 {
+	HAP_PRINTF("In Scheduler::init");
+
     _main_task_pid = getpid();
 
     // setup the timer thread - this will call tasks at 1kHz
@@ -36,28 +38,28 @@ void Scheduler::init()
 
 	pthread_attr_init(&thread_attr);
 	pthread_attr_setstacksize(&thread_attr, 40960);
-
+	
 	param.sched_priority = APM_TIMER_PRIORITY;
 	(void)pthread_attr_setschedparam(&thread_attr, &param);
-
+	
 	pthread_create(&_timer_thread_ctx, &thread_attr, &Scheduler::_timer_thread, this);
-
+	
     // the UART thread runs at a medium priority
 	pthread_attr_init(&thread_attr);
 	pthread_attr_setstacksize(&thread_attr, 40960);
-
+	
 	param.sched_priority = APM_UART_PRIORITY;
 	(void)pthread_attr_setschedparam(&thread_attr, &param);
-
+	
 	pthread_create(&_uart_thread_ctx, &thread_attr, &Scheduler::_uart_thread, this);
-
+	
     // the IO thread runs at lower priority
 	pthread_attr_init(&thread_attr);
 	pthread_attr_setstacksize(&thread_attr, 40960);
-
+	
 	param.sched_priority = APM_IO_PRIORITY;
 	(void)pthread_attr_setschedparam(&thread_attr, &param);
-
+	
 	pthread_create(&_io_thread_ctx, &thread_attr, &Scheduler::_io_thread, this);
 }
 

@@ -35,7 +35,9 @@
 #define AP_HAL_MAIN_CALLBACKS(CALLBACKS) extern "C" { \
     int AP_MAIN(int argc, char* const argv[]); \
     int AP_MAIN(int argc, char* const argv[]) { \
-        hal.run(argc, argv, CALLBACKS); \
+	    HAP_PRINTF("About to call hal.run %p", &hal); \
+        /* hal.run(argc, argv, CALLBACKS); */ \
+        AP_HAL::get_HAL().run(argc, argv, CALLBACKS); \
         return 0; \
     } \
     }
